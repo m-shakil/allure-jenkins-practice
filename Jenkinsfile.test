@@ -13,7 +13,7 @@ pipeline {
     post {
         always {
             archiveArtifacts(
-                artifacts: 'allure-results',
+                artifacts: 'allure-results/**',
                 allowEmptyArchive: true
             )
             build job: 'Allure-Report',

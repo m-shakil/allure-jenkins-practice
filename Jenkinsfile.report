@@ -6,7 +6,7 @@ pipeline {
             steps {
                 copyArtifacts(
                     projectName: 'Allure-Test',
-                    selector: lastCompleted(),
+                    selector: upstream(),
                     filter: 'allure-results/**'
                 )
             }
