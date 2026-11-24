@@ -19,15 +19,25 @@ pipeline {
         }
     }
 
-    stage('Verify') {
-        stage {
-            allure {
+    post {
+        always {
+            allure(
                 commandline: 'Allure',
                 includeProperties: false,
                 jdk: '',
                 resultPolicy: 'LEAVE_AS_IS',
                 results: [[path: 'allure-results']]
-            }
+            )
+
+            echo 'Pipeline finished!'
+        }
+
+        success {
+            echo 'Build was successful!'
+        }
+
+        failure {
+            echo 'Build failed!'
         }
     }
 }
