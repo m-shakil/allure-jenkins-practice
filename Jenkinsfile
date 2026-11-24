@@ -30,7 +30,8 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'This is the test stage'
+                bat 'npm ci'
+                bat 'npm run practice'
             }
         }
 
@@ -45,6 +46,14 @@ pipeline {
 
     post {
         always {
+            allure(
+                commandline: 'Allure',
+                includeProperties: false,
+                jdk: '',
+                resultPolicy: 'LEAVE_AS_IS',
+                results: [[path: 'allure-results']]
+            )
+
             echo 'Pipeline finished!'
         }
 
