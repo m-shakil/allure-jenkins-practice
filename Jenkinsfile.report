@@ -18,9 +18,9 @@ pipeline {
             bat 'dir allure-results'
         }
     }
-    
-    post {
-        always {
+
+    stage('Verify') {
+        stage {
             allure {
                 commandline: 'Allure',
                 includeProperties: false,
@@ -30,5 +30,4 @@ pipeline {
             }
         }
     }
-    
 }

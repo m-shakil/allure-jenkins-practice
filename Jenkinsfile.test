@@ -17,7 +17,8 @@ pipeline {
                 allowEmptyArchive: true
             )
             build job: 'Allure-Report',
-                wait: false
+                wait: false,
+                propagate: false
         }
     }
 }
