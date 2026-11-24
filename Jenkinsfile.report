@@ -1,40 +1,33 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Copy Test Results') {
+        stage('Copy Test Result') {
             steps {
                 copyArtifacts(
                     projectName: 'Allure-Test',
-                    selector: upstream(),
-                    filter: 'build-info.txt,allure-results.zip,allure-results/**'
+                    selector: lastCompleted(),
+                    filter: 'allure-results/**'
                 )
             }
         }
-
-        stage('Verify Test Results') {
+        stage('verify Test Result') {
             steps {
-                bat 'dir'
                 bat 'dir allure-results'
-                bat 'type build-info.txt'
-            }
-        }
-
-        stage('Generate Allure Report') {
-            steps {
-                allure(
-                    commandline: 'Allure',
-                    includeProperties: false,
-                    jdk: '',
-                    resultPolicy: 'LEAVE_AS_IS',
-                    results: [[path: 'allure-results']]
-                )
             }
         }
     }
 
     post {
         always {
+            allure(
+                commandline: 'Allure',
+                includeProperties: false,
+                jdk: '',
+                resultPolicy: 'LEAVE_AS_IS',
+                results: [[path: 'allure-results']]
+            )
+
             echo 'Pipeline finished!'
         }
 

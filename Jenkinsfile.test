@@ -1,6 +1,6 @@
 pipeline {
-    agent any
-
+    agent any 
+    
     stages {
         stage('Run Tests') {
             steps {
@@ -9,21 +9,13 @@ pipeline {
             }
         }
     }
-
+    
     post {
         always {
-            bat 'echo Test execution completed > build-info.txt'
-
-            bat '''
-                powershell -NoProfile -Command "if (Test-Path 'allure-results') { Compress-Archive -Path 'allure-results' -DestinationPath 'allure-results.zip' -Force } else { Write-Host 'WARNING: allure-results directory not found' }"
-            '''
-
             archiveArtifacts(
-                artifacts: 'build-info.txt,allure-results.zip,allure-results/**',
-                allowEmptyArchive: true,
-                fingerprint: true
+                artifacts: 'allure-results',
+                allowEmptyArchive: true
             )
-
             build job: 'Allure-Report',
                 wait: false,
                 propagate: false
