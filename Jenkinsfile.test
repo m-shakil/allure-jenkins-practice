@@ -12,10 +12,13 @@ pipeline {
     
     post {
         always {
+            bat 'echo Test execution completed > build-info.txt'
+
             archiveArtifacts(
-                artifacts: 'allure-results',
-                allowEmptyArchive: true
+                artifacts: 'build-info.txt',
+                fingerprint: true
             )
+
             build job: 'Allure-Report',
                 wait: false,
                 propagate: false
