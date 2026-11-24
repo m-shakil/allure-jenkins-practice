@@ -1,68 +1,23 @@
-
 pipeline {
-    agent any
-
-    environment {
-        APP_NAME = 'Allure Practice'
-        TEST_ENV = 'QA'
-    }
-
-    parameters {
-        choice(
-            name: 'TARGET_ENV',
-            choices: ['QA', 'UAT', 'Production'],
-            description: 'Select the test environment'
-        )
-    }
-
+    agent any 
+    
     stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World!'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'This is the build stage'
-            }
-        }
-
-        stage('Test') {
+        stage('Run Tests') {
             steps {
                 bat 'npm ci'
                 bat 'npm run practice'
             }
         }
-
-        stage('Environment') {
-            steps {
-                echo "Application: ${APP_NAME}"
-                echo "Default Environment: ${TEST_ENV}"
-                echo "Selected Environment: ${params.TARGET_ENV}"
-            }
-        }
     }
-
+    
     post {
         always {
-            allure(
-                commandline: 'Allure',
-                includeProperties: false,
-                jdk: '',
-                resultPolicy: 'LEAVE_AS_IS',
-                results: [[path: 'allure-results']]
+            archiveArtifacts(
+                artifacts: 'allure-results',
+                allowEmptyArchive: true
             )
-
-            echo 'Pipeline finished!'
-        }
-
-        success {
-            echo 'Build was successful!'
-        }
-
-        failure {
-            echo 'Build failed!'
+            build job: 'Allure-Report',
+                wait: false
         }
     }
 }
