@@ -11,11 +11,10 @@ pipeline {
                 )
             }
         }
-    }
-    
-    stage('Verify') {
-        stage {
-            bat 'dir allure-results'
+        stage('verify Test Result') {
+            steps {
+                bat 'dir allure-results'
+            }
         }
     }
 
